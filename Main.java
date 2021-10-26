@@ -27,17 +27,11 @@ public class Main {
         int numItemsFound = 0;
 
         for (String searchItem : searchItems) {
-            String[] searchTerm = searchItem.split(" ");
-            for (String s : dataSource) {
-                String[] datum = s.split(" ");
-                if (searchTerm[0].equals(datum[1])) {
-                    if (datum.length > 2 && searchTerm[1].equals(datum[2])) {
-                        numItemsFound++;
-                        break;
-                    } else if (datum.length == 2) {
-                        numItemsFound++;
-                        break;
-                    }
+            for (String tuple : dataSource) {
+                String[] datum = tuple.split(" ", 2);
+                if (searchItem.equals(datum[1])) {
+                    numItemsFound++;
+                    break;
                 }
             }
         }
