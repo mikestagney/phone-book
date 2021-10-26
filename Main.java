@@ -2,10 +2,11 @@ package phonebook;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 // test file names
 // /Users/mikestagney/Downloads/small_directory.txt
@@ -22,10 +23,10 @@ public class Main {
         List<String> searchItems = readFromFile(searchFile);
 
         System.out.println("Start searching...");
-        int numberItemsToFind = searchItems.size();
         long startTime = System.currentTimeMillis();
-        int numItemsFound = 0;
 
+        int numberItemsToFind = searchItems.size();
+        int numItemsFound = 0;
         for (String searchItem : searchItems) {
             for (String tuple : dataSource) {
                 String[] datum = tuple.split(" ", 2);
@@ -35,16 +36,16 @@ public class Main {
                 }
             }
         }
-        long timeTaken = System.currentTimeMillis() - startTime;
+        long endTime = System.currentTimeMillis();
+        long timeTaken =  endTime - startTime;
+        Duration duration = Duration.of(timeTaken, ChronoUnit.MILLIS);
 
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(timeTaken);
-        long seconds = (TimeUnit.MILLISECONDS.toSeconds(timeTaken) % 60);
-        long milliseconds = (timeTaken - minutes - seconds) % 1000;
+        long minutes = duration.toMinutesPart();
+        long seconds = duration.toSecondsPart();
+        long milliseconds = duration.toMillisPart();
 
-        System.out.println("Total milliseconds " + timeTaken);
         System.out.printf("Found %d / %d entries. Time taken: %d min. %d sec. %d ms.\n",
                 numItemsFound, numberItemsToFind, minutes, seconds, milliseconds );
-
     }
 
     public static List<String> readFromFile(File fileName) {
@@ -54,7 +55,7 @@ public class Main {
                 list.add(scanner.nextLine());
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Data file not found!");
+            System.out.println(fileName + " file not found!");
         }
         return list;
     }
