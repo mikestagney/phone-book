@@ -27,7 +27,7 @@ public class Main {
                 numItemsFound, numberItemsToFind, linearTimer.getMinutes(), linearTimer.getSeconds(), linearTimer.getMilliseconds() );
 
         System.out.println("Start searching (bubble sort + jump search)...");
-        Timer jumpTimer = new Timer();
+        Timer sortTimer = new Timer();
         // add bubble sort
         for (int i = 0; i < dataSource.size(); i++) {
             for (int j = i + 1; j < dataSource.size(); j++) {
@@ -40,17 +40,38 @@ public class Main {
                 }
             }
         }
-        dataSource.forEach(System.out::println);
+        sortTimer.stopTimer();
+        System.out.printf("Sorting time taken: %d min. %d sec. %d ms.\n",
+                sortTimer.getMinutes(), sortTimer.getSeconds(), sortTimer.getMilliseconds() );
+
+        // dataSource.forEach(System.out::println);
 
         // jump search
+        Timer jumpSearchTimer = new Timer();
         int jumpInterval = (int) Math.floor(Math.sqrt(dataSource.size()));
+        numItemsFound = 0;
         for (String name: searchItems) {
             for (int i = 0; i < numberItemsToFind; i += jumpInterval) {
-
-
-
+                if (name.equals(dataSource.get(i))) {
+                    numItemsFound++;
+                    break;
+                }
+                if (name.compareTo(dataSource.get(i)) > 0) {
+                    continue;
+                }
+                for (int j = i - 1; j > i - jumpInterval; j--) {
+                    if (name.equals(dataSource.get(j))) {
+                        numItemsFound++;
+                        break;
+                    }
+                }
             }
+
         }
+        jumpSearchTimer.stopTimer();
+        System.out.printf("Found %d / %d entries. Time taken: %d min. %d sec. %d ms.\n",
+                numItemsFound, numberItemsToFind, jumpSearchTimer.getMinutes(), jumpSearchTimer.getSeconds(), jumpSearchTimer.getMilliseconds() );
+
 
 
     }
