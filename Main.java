@@ -45,28 +45,32 @@ public class Main {
                 sortTimer.getMinutes(), sortTimer.getSeconds(), sortTimer.getMilliseconds() );
 
         // dataSource.forEach(System.out::println);
-
+        System.out.println();
         // jump search
         Timer jumpSearchTimer = new Timer();
         int jumpInterval = (int) Math.floor(Math.sqrt(dataSource.size()));
         numItemsFound = 0;
         for (String name: searchItems) {
-            for (int i = 0; i < numberItemsToFind; i += jumpInterval) {
-                if (name.equals(dataSource.get(i))) {
+            for (int i = 0; i < dataSource.size(); i += jumpInterval) {
+                String[] tuple = dataSource.get(i).split(" ", 2);
+                String indexName = tuple[1];
+                if (name.equals(indexName)) {
                     numItemsFound++;
                     break;
                 }
-                if (name.compareTo(dataSource.get(i)) > 0) {
+                if (name.compareTo(indexName) > 0) {
                     continue;
                 }
                 for (int j = i - 1; j > i - jumpInterval; j--) {
-                    if (name.equals(dataSource.get(j))) {
+                    String[] countBackTuple = dataSource.get(j).split(" ", 2);
+                    String countBackName = countBackTuple[1];
+                    if (name.equals(countBackName)) {
                         numItemsFound++;
                         break;
                     }
                 }
+                break;
             }
-
         }
         jumpSearchTimer.stopTimer();
         System.out.printf("Found %d / %d entries. Time taken: %d min. %d sec. %d ms.\n",
