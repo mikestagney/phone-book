@@ -15,6 +15,7 @@ public class Timer {
     private long seconds;
     private long milliseconds;
 
+
     Timer() {
         startTime = Instant.now().toEpochMilli();
         timerStopped = false;
@@ -29,6 +30,7 @@ public class Timer {
         timeTaken = startTime - endTime;
         duration = Duration.of(timeTaken, ChronoUnit.MILLIS);
         timerStopped = true;
+
         minutes = duration.toMinutesPart();
         seconds = duration.toSecondsPart();
         milliseconds = duration.toMillisPart();
@@ -41,6 +43,9 @@ public class Timer {
     }
     public long getMilliseconds() {
         return timerStopped ? milliseconds : 0;
+    }
+    public long getTotalTimeMilli() {
+        return timerStopped ? timeTaken : 0;
     }
 
 }
