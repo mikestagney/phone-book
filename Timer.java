@@ -22,6 +22,9 @@ public class Timer {
     }
 
     public long getCurrentTime() {
+        // make this a duration and convert it to mills and return it
+
+
         return startTime - Instant.now().toEpochMilli();
     }
 
@@ -45,7 +48,7 @@ public class Timer {
         return timerStopped ? milliseconds : 0;
     }
     public long getTotalTimeMilli() {
-        return timerStopped ? timeTaken : 0;
+        return timerStopped ? duration.toMillis() : 0;
     }
 
 }
