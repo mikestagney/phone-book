@@ -4,7 +4,7 @@ import java.util.List;
 
 public class LinearSearch {
 
-    public static int go(List<String> dataSource, List<String> searchItems) {
+    public static int search(List<String> dataSource, List<String> searchItems) {
         int numItemsFound = 0;
         for (String searchItem : searchItems) {
             for (String tuple : dataSource) {

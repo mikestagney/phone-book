@@ -16,7 +16,7 @@ public class Main {
     System.out.println("Start searching (linear search)...");
     Timer linearTimer = new Timer();
 
-    int numItemsFound = LinearSearch.go(dataSource, searchItems);
+    int numItemsFound = LinearSearch.search(dataSource, searchItems);
 
     linearTimer.stopTimer();
     System.out.printf("Found %d / %d entries. Time taken: %d min. %d sec. %d ms.\n",
@@ -24,13 +24,14 @@ public class Main {
     System.out.println();
 
     long linearSearchThreshold = Math.abs(linearTimer.getTotalTimeMilli()) * 10L;
-    //System.out.println("search threshold " + linearSearchThreshold);
+
     System.out.println("Start searching (bubble sort + jump search)...");
     Timer totalSortSearchTimer = new Timer();
     Timer sortTimer = new Timer();
-    // add bubble sort
-    boolean completeSearch = true;
-        for (int i = 0; i < dataSource.size() - 1; i++) {
+
+    boolean completeBubbleSort = true;
+    /*
+    for (int i = 0; i < dataSource.size() - 1; i++) {
         for (int j = i + 1; j < dataSource.size(); j++) {
             String[] firstTuple = dataSource.get(i).split(" ", 2);
             String firstName = firstTuple[1];
@@ -40,16 +41,40 @@ public class Main {
                 Collections.swap(dataSource, i, j);
             }
         }
-        // System.out.println("Current time: " + sortTimer.getCurrentTime() + " compare to " + linearSearchThreshold);
         if (sortTimer.getCurrentTime() > linearSearchThreshold) {
-            completeSearch = false;
+            completeBubbleSort = false;
             break;
         }
     }
-    if (!completeSearch) {
-        sortTimer.stopTimer();
+    */
+    int numOfSwaps = -1;
+    while (numOfSwaps != 0) {
+        numOfSwaps = 0;
+        for (int i = 0; i < dataSource.size() - 1; i++) {
+            String[] firstTuple = dataSource.get(i).split(" ", 2);
+            String firstName = firstTuple[1];
+            String[] secondTuple = dataSource.get(i + 1).split(" ",  2);
+            String secondName = secondTuple[1];
+            if (firstName.compareTo(secondName) > 0) {
+                Collections.swap(dataSource, i, i + 1);
+                numOfSwaps++;
+            }
+        }
+
+        if (sortTimer.getCurrentTime() > linearSearchThreshold) {
+            completeBubbleSort = false;
+            break;
+        }
+    }
+    // dataSource.forEach(System.out::println);
+
+
+
+
+    sortTimer.stopTimer();
+    if (!completeBubbleSort) {
         Timer nextLinearTimer = new Timer();
-        numItemsFound = LinearSearch.go(dataSource, searchItems);
+        numItemsFound = LinearSearch.search(dataSource, searchItems);
         nextLinearTimer.stopTimer();
         totalSortSearchTimer.stopTimer();
         System.out.printf("Found %d / %d entries. Time taken: %d min. %d sec. %d ms.\n",
@@ -62,11 +87,8 @@ public class Main {
 
     } else {
 
-        sortTimer.stopTimer();
         System.out.printf("Sorting time: %d min. %d sec. %d ms.\n",
-                sortTimer.getMinutes(), sortTimer.getSeconds(), sortTimer.getMilliseconds());
-
-        //dataSource.forEach(System.out::println);
+            sortTimer.getMinutes(), sortTimer.getSeconds(), sortTimer.getMilliseconds());
 
         // jump search
         Timer jumpSearchTimer = new Timer();
@@ -91,11 +113,12 @@ public class Main {
                         break;
                     }
                 }
+
                 break;
             }
         }
-        totalSortSearchTimer.stopTimer();
         jumpSearchTimer.stopTimer();
+        totalSortSearchTimer.stopTimer();
         System.out.printf("Searching time: %d min. %d sec. %d ms.\n",
                 jumpSearchTimer.getMinutes(), jumpSearchTimer.getSeconds(), jumpSearchTimer.getMilliseconds());
         System.out.println();

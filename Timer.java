@@ -6,9 +6,7 @@ import java.time.temporal.ChronoUnit;
 
 public class Timer {
 
-    private long startTime;
-    private long endTime; // = System.currentTimeMillis();
-    private long timeTaken;// =  endTime - startTime;
+    private final long startTime;
     private Duration duration;
     private boolean timerStopped;
     private long minutes;
@@ -22,15 +20,12 @@ public class Timer {
     }
 
     public long getCurrentTime() {
-        // make this a duration and convert it to mills and return it
-
-
         return Math.abs(startTime - Instant.now().toEpochMilli());
     }
 
     public void stopTimer() {
-        endTime = Instant.now().toEpochMilli();
-        timeTaken = startTime - endTime;
+        long endTime = Instant.now().toEpochMilli();
+        long timeTaken = startTime - endTime;
         duration = Duration.of(timeTaken, ChronoUnit.MILLIS);
         timerStopped = true;
 
