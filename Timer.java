@@ -25,7 +25,7 @@ public class Timer {
         // make this a duration and convert it to mills and return it
 
 
-        return startTime - Instant.now().toEpochMilli();
+        return Math.abs(startTime - Instant.now().toEpochMilli());
     }
 
     public void stopTimer() {
@@ -39,7 +39,7 @@ public class Timer {
         milliseconds = duration.toMillisPart();
     }
     public long getMinutes() {
-        return timerStopped ? minutes : 0;
+        return timerStopped ? Math.abs(minutes) : 0;
     }
     public long getSeconds() {
         return timerStopped ? Math.abs(seconds) : 0;
