@@ -30,56 +30,32 @@ public class Main {
     Timer sortTimer = new Timer();
 
     boolean completeBubbleSort = true;
-    /*
-    for (int i = 0; i < dataSource.size() - 1; i++) {
-        for (int j = i + 1; j < dataSource.size(); j++) {
-            String[] firstTuple = dataSource.get(i).split(" ", 2);
-            String firstName = firstTuple[1];
-            String[] secondTuple = dataSource.get(j).split(" ",  2);
-            String secondName = secondTuple[1];
-            if (firstName.compareTo(secondName) > 0) {
-                Collections.swap(dataSource, i, j);
-            }
-        }
-        if (sortTimer.getCurrentTime() > linearSearchThreshold) {
-            completeBubbleSort = false;
-            break;
-        }
-    }
-    */
     int numOfSwaps = -1;
     while (numOfSwaps != 0) {
         numOfSwaps = 0;
         for (int i = 0; i < dataSource.size() - 1; i++) {
-            String[] firstTuple = dataSource.get(i).split(" ", 2);
-            String firstName = firstTuple[1];
-            String[] secondTuple = dataSource.get(i + 1).split(" ",  2);
-            String secondName = secondTuple[1];
+            String firstName = getNameFromTuple(dataSource, i);
+            String secondName = getNameFromTuple(dataSource, i + 1);
             if (firstName.compareTo(secondName) > 0) {
                 Collections.swap(dataSource, i, i + 1);
                 numOfSwaps++;
             }
         }
-
         if (sortTimer.getCurrentTime() > linearSearchThreshold) {
             completeBubbleSort = false;
             break;
         }
     }
-    // dataSource.forEach(System.out::println);
-
-
-
-
     sortTimer.stopTimer();
+
     if (!completeBubbleSort) {
         Timer nextLinearTimer = new Timer();
         numItemsFound = LinearSearch.search(dataSource, searchItems);
         nextLinearTimer.stopTimer();
         totalSortSearchTimer.stopTimer();
+
         System.out.printf("Found %d / %d entries. Time taken: %d min. %d sec. %d ms.\n",
                 numItemsFound, numberItemsToFind, totalSortSearchTimer.getMinutes(), totalSortSearchTimer.getSeconds(), totalSortSearchTimer.getMilliseconds() );
-
         System.out.printf("Sorting time: %d min. %d sec. %d ms. - STOPPED, moved to linear search\n",
                 sortTimer.getMinutes(), sortTimer.getSeconds(), sortTimer.getMilliseconds());
         System.out.printf("Searching time: %d min. %d sec. %d ms.\n",
@@ -87,17 +63,12 @@ public class Main {
 
     } else {
 
-        System.out.printf("Sorting time: %d min. %d sec. %d ms.\n",
-            sortTimer.getMinutes(), sortTimer.getSeconds(), sortTimer.getMilliseconds());
-
-        // jump search
         Timer jumpSearchTimer = new Timer();
         int jumpInterval = (int) Math.floor(Math.sqrt(dataSource.size()));
         numItemsFound = 0;
         for (String name : searchItems) {
             for (int i = 0; i < dataSource.size(); i += jumpInterval) {
-                String[] tuple = dataSource.get(i).split(" ", 2);
-                String indexName = tuple[1];
+                String indexName = getNameFromTuple(dataSource, i);
                 if (name.equals(indexName)) {
                     numItemsFound++;
                     break;
@@ -106,28 +77,42 @@ public class Main {
                     continue;
                 }
                 for (int j = i - 1; j > i - jumpInterval; j--) {
-                    String[] countBackTuple = dataSource.get(j).split(" ", 2);
-                    String countBackName = countBackTuple[1];
+                    String countBackName = getNameFromTuple(dataSource, j);
                     if (name.equals(countBackName)) {
                         numItemsFound++;
                         break;
                     }
                 }
-
+                if (i + jumpInterval >= dataSource.size()) {
+                    for (int j = dataSource.size() - 1; j > i; j--) {
+                        String countBackFromEndName = getNameFromTuple(dataSource, j);
+                        if (name.equals(countBackFromEndName)) {
+                            numItemsFound++;
+                            break;
+                        }
+                    }
+                }
                 break;
             }
         }
         jumpSearchTimer.stopTimer();
         totalSortSearchTimer.stopTimer();
+
+        System.out.printf("Sorting time: %d min. %d sec. %d ms.\n",
+                sortTimer.getMinutes(), sortTimer.getSeconds(), sortTimer.getMilliseconds());
         System.out.printf("Searching time: %d min. %d sec. %d ms.\n",
                 jumpSearchTimer.getMinutes(), jumpSearchTimer.getSeconds(), jumpSearchTimer.getMilliseconds());
         System.out.println();
         System.out.printf("Found %d / %d entries. Time taken: %d min. %d sec. %d ms.\n",
                 numItemsFound, numberItemsToFind, totalSortSearchTimer.getMinutes(), totalSortSearchTimer.getSeconds(), totalSortSearchTimer.getMilliseconds());
 
+        }
     }
-
-}}
+    public static String getNameFromTuple(List<String> list, int index) {
+        String[] tuple = list.get(index).split(" ", 2);
+        return tuple[1];
+    }
+}
 
 
 
