@@ -31,16 +31,21 @@ public class Main {
 
     boolean completeBubbleSort = true;
     int numOfSwaps = -1;
+    int counter = 1;
     while (numOfSwaps != 0) {
         numOfSwaps = 0;
-        for (int i = 0; i < dataSource.size() - 1; i++) {
+
+        for (int i = 0; i < dataSource.size() - counter; i++) {
             String firstName = getNameFromTuple(dataSource, i);
             String secondName = getNameFromTuple(dataSource, i + 1);
             if (firstName.compareTo(secondName) > 0) {
                 Collections.swap(dataSource, i, i + 1);
                 numOfSwaps++;
             }
+
         }
+        counter++;
+
         if (sortTimer.getCurrentTime() > linearSearchThreshold) {
             completeBubbleSort = false;
             break;
