@@ -49,11 +49,11 @@ public class Main {
 
         }
         counter++;
-
+        /*
         if (sortTimer.getCurrentTime() > linearSearchThreshold) {
             completeBubbleSort = false;
             break;
-        }
+        }*/
     }
     sortTimer.stopTimer();
 
@@ -116,15 +116,33 @@ public class Main {
                 numItemsFound, numberItemsToFind, totalSortSearchTimer.getMinutes(), totalSortSearchTimer.getSeconds(), totalSortSearchTimer.getMilliseconds());
 
         }
+        System.out.println();
         System.out.println("Start searching (quick sort + binary search)...");
         List<String> quickSortBinarySearchList = new ArrayList<>(dataSource);
 
+
         Timer quickBinaryTimer = new Timer();
+        Timer quickSortTimer = new Timer();
 
         quickSortBinarySearchList = quickSort(quickSortBinarySearchList);
-        quickSortBinarySearchList.forEach(System.out::println);
+        quickSortTimer.stopTimer();
+        // quickSortBinarySearchList.forEach(System.out::println);
+
+        Timer binaryTimer = new Timer();
+        numItemsFound = BinarySearch.search(quickSortBinarySearchList, searchItems);
+        binaryTimer.stopTimer();
+        quickBinaryTimer.stopTimer();
+
+        System.out.printf("Sorting time: %d min. %d sec. %d ms.\n",
+                    quickSortTimer.getMinutes(), quickSortTimer.getSeconds(), quickSortTimer.getMilliseconds());
+        System.out.printf("Searching time: %d min. %d sec. %d ms.\n",
+                binaryTimer.getMinutes(), binaryTimer.getSeconds(), binaryTimer.getMilliseconds());
+        System.out.printf("Found %d / %d entries. Time taken: %d min. %d sec. %d ms.\n",
+                numItemsFound, numberItemsToFind, quickBinaryTimer.getMinutes(), quickBinaryTimer.getSeconds(), quickBinaryTimer.getMilliseconds());
+
 
     }
+
     public static String getNameFromTuple(List<String> list, int index) {
         String[] tuple = list.get(index).split(" ", 2);
         return tuple[1];
