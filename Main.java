@@ -1,11 +1,13 @@
 package phonebook;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
-    public static final String dataFilePath = "/Users/mikestagney/Downloads/directory.txt";
-    public static final String searchFilePath = "/Users/mikestagney/Downloads/find.txt";
+    public static final String dataFilePath = "/Users/mikestagney/Downloads/small_directory.txt";
+    public static final String searchFilePath = "/Users/mikestagney/Downloads/small_find.txt";
 
     public static void main(String[] args) {
 
@@ -26,6 +28,8 @@ public class Main {
     long linearSearchThreshold = Math.abs(linearTimer.getTotalTimeMilli()) * 10L;
 
     System.out.println("Start searching (bubble sort + jump search)...");
+
+    List<String> bubbleSortJumpSearchList = new ArrayList<>(dataSource);
     Timer totalSortSearchTimer = new Timer();
     Timer sortTimer = new Timer();
 
@@ -35,11 +39,11 @@ public class Main {
     while (numOfSwaps != 0) {
         numOfSwaps = 0;
 
-        for (int i = 0; i < dataSource.size() - counter; i++) {
-            String firstName = getNameFromTuple(dataSource, i);
-            String secondName = getNameFromTuple(dataSource, i + 1);
+        for (int i = 0; i < bubbleSortJumpSearchList.size() - counter; i++) {
+            String firstName = getNameFromTuple(bubbleSortJumpSearchList, i);
+            String secondName = getNameFromTuple(bubbleSortJumpSearchList, i + 1);
             if (firstName.compareTo(secondName) > 0) {
-                Collections.swap(dataSource, i, i + 1);
+                Collections.swap(bubbleSortJumpSearchList, i, i + 1);
                 numOfSwaps++;
             }
 
@@ -55,7 +59,7 @@ public class Main {
 
     if (!completeBubbleSort) {
         Timer nextLinearTimer = new Timer();
-        numItemsFound = LinearSearch.search(dataSource, searchItems);
+        numItemsFound = LinearSearch.search(bubbleSortJumpSearchList, searchItems);
         nextLinearTimer.stopTimer();
         totalSortSearchTimer.stopTimer();
 
@@ -69,11 +73,11 @@ public class Main {
     } else {
 
         Timer jumpSearchTimer = new Timer();
-        int jumpInterval = (int) Math.floor(Math.sqrt(dataSource.size()));
+        int jumpInterval = (int) Math.floor(Math.sqrt(bubbleSortJumpSearchList.size()));
         numItemsFound = 0;
         for (String name : searchItems) {
-            for (int i = 0; i < dataSource.size(); i += jumpInterval) {
-                String indexName = getNameFromTuple(dataSource, i);
+            for (int i = 0; i < bubbleSortJumpSearchList.size(); i += jumpInterval) {
+                String indexName = getNameFromTuple(bubbleSortJumpSearchList, i);
                 if (name.equals(indexName)) {
                     numItemsFound++;
                     break;
@@ -82,15 +86,15 @@ public class Main {
                     continue;
                 }
                 for (int j = i - 1; j > i - jumpInterval; j--) {
-                    String countBackName = getNameFromTuple(dataSource, j);
+                    String countBackName = getNameFromTuple(bubbleSortJumpSearchList, j);
                     if (name.equals(countBackName)) {
                         numItemsFound++;
                         break;
                     }
                 }
-                if (i + jumpInterval >= dataSource.size()) {
-                    for (int j = dataSource.size() - 1; j > i; j--) {
-                        String countBackFromEndName = getNameFromTuple(dataSource, j);
+                if (i + jumpInterval >= bubbleSortJumpSearchList.size()) {
+                    for (int j = bubbleSortJumpSearchList.size() - 1; j > i; j--) {
+                        String countBackFromEndName = getNameFromTuple(bubbleSortJumpSearchList, j);
                         if (name.equals(countBackFromEndName)) {
                             numItemsFound++;
                             break;
@@ -112,11 +116,40 @@ public class Main {
                 numItemsFound, numberItemsToFind, totalSortSearchTimer.getMinutes(), totalSortSearchTimer.getSeconds(), totalSortSearchTimer.getMilliseconds());
 
         }
+        System.out.println("Start searching (quick sort + binary search)...");
+        List<String> quickSortBinarySearchList = new ArrayList<>(dataSource);
+
+        Timer quickBinaryTimer = new Timer();
+
+        quickSortBinarySearchList = quickSort(quickSortBinarySearchList);
+        quickSortBinarySearchList.forEach(System.out::println);
+
     }
     public static String getNameFromTuple(List<String> list, int index) {
         String[] tuple = list.get(index).split(" ", 2);
         return tuple[1];
     }
+    public static List<String> quickSort(List<String> list) {
+        if (list.size() <= 1) {
+            return list;
+        }
+        String pivot = getNameFromTuple(list, list.size() - 1);
+        List<String> lower = new ArrayList<>();
+        List<String> upper = new ArrayList<>();
+        for (int i = 0; i < list.size() - 2; i++) {
+            if (getNameFromTuple(list, i).compareTo(pivot) > 0) {
+                upper.add(list.get(i));
+            } else {
+                lower.add(list.get(i));
+            }
+        }
+        List<String> lowHolder = quickSort(lower);
+        List<String> upperHolder = quickSort(upper);
+
+        lowHolder.addAll(upperHolder);
+        return lowHolder;
+    }
+
 }
 
 
