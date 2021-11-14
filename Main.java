@@ -1,15 +1,17 @@
 package phonebook;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
-    public static final String dataFilePath = "/Users/mikestagney/Downloads/small_directory.txt";
-    public static final String searchFilePath = "/Users/mikestagney/Downloads/small_find.txt";
+    public static final String dataFilePath = "/Users/mikestagney/Downloads/directory.txt";
+    public static final String searchFilePath = "/Users/mikestagney/Downloads/find.txt";
 
-    public static void main(String[] args) {
+    public static void main (String[] args) {
 
     List<String> dataSource = FileIO.readFromFile(dataFilePath);
     List<String> searchItems = FileIO.readFromFile(searchFilePath);
@@ -49,11 +51,11 @@ public class Main {
 
         }
         counter++;
-        /*
+
         if (sortTimer.getCurrentTime() > linearSearchThreshold) {
             completeBubbleSort = false;
             break;
-        }*/
+        }
     }
     sortTimer.stopTimer();
 
@@ -69,6 +71,7 @@ public class Main {
                 sortTimer.getMinutes(), sortTimer.getSeconds(), sortTimer.getMilliseconds());
         System.out.printf("Searching time: %d min. %d sec. %d ms.\n",
                 nextLinearTimer.getMinutes(), nextLinearTimer.getSeconds(), nextLinearTimer.getMilliseconds());
+        System.out.println();
 
     } else {
 
@@ -106,41 +109,21 @@ public class Main {
         }
         jumpSearchTimer.stopTimer();
         totalSortSearchTimer.stopTimer();
-
-        System.out.printf("Sorting time: %d min. %d sec. %d ms.\n",
-                sortTimer.getMinutes(), sortTimer.getSeconds(), sortTimer.getMilliseconds());
-        System.out.printf("Searching time: %d min. %d sec. %d ms.\n",
-                jumpSearchTimer.getMinutes(), jumpSearchTimer.getSeconds(), jumpSearchTimer.getMilliseconds());
-        System.out.println();
-        System.out.printf("Found %d / %d entries. Time taken: %d min. %d sec. %d ms.\n",
-                numItemsFound, numberItemsToFind, totalSortSearchTimer.getMinutes(), totalSortSearchTimer.getSeconds(), totalSortSearchTimer.getMilliseconds());
-
+        printResults(numItemsFound, numberItemsToFind, sortTimer, jumpSearchTimer);
         }
-        System.out.println();
-        System.out.println("Start searching (quick sort + binary search)...");
-        List<String> quickSortBinarySearchList = new ArrayList<>(dataSource);
 
+    System.out.println("Start searching (quick sort + binary search)...");
+    List<String> quickSortBinarySearchList = new ArrayList<>(dataSource);
 
-        Timer quickBinaryTimer = new Timer();
-        Timer quickSortTimer = new Timer();
+    Timer quickSortTimer = new Timer();
+    quickSortBinarySearchList = quickSort(quickSortBinarySearchList);
+    quickSortTimer.stopTimer();
 
-        quickSortBinarySearchList = quickSort(quickSortBinarySearchList);
-        quickSortTimer.stopTimer();
-        // quickSortBinarySearchList.forEach(System.out::println);
+    Timer binaryTimer = new Timer();
+    numItemsFound = BinarySearch.search(quickSortBinarySearchList, searchItems);
+    binaryTimer.stopTimer();
 
-        Timer binaryTimer = new Timer();
-        numItemsFound = BinarySearch.search(quickSortBinarySearchList, searchItems);
-        binaryTimer.stopTimer();
-        quickBinaryTimer.stopTimer();
-
-        System.out.printf("Sorting time: %d min. %d sec. %d ms.\n",
-                    quickSortTimer.getMinutes(), quickSortTimer.getSeconds(), quickSortTimer.getMilliseconds());
-        System.out.printf("Searching time: %d min. %d sec. %d ms.\n",
-                binaryTimer.getMinutes(), binaryTimer.getSeconds(), binaryTimer.getMilliseconds());
-        System.out.printf("Found %d / %d entries. Time taken: %d min. %d sec. %d ms.\n",
-                numItemsFound, numberItemsToFind, quickBinaryTimer.getMinutes(), quickBinaryTimer.getSeconds(), quickBinaryTimer.getMilliseconds());
-
-
+    printResults(numItemsFound, numberItemsToFind, quickSortTimer, binaryTimer);
     }
 
     public static String getNameFromTuple(List<String> list, int index) {
@@ -154,19 +137,42 @@ public class Main {
         String pivot = getNameFromTuple(list, list.size() - 1);
         List<String> lower = new ArrayList<>();
         List<String> upper = new ArrayList<>();
-        for (int i = 0; i < list.size() - 2; i++) {
+
+
+        for (int i = 0; i < list.size() - 1; i++) {
             if (getNameFromTuple(list, i).compareTo(pivot) > 0) {
                 upper.add(list.get(i));
             } else {
                 lower.add(list.get(i));
             }
         }
-        List<String> lowHolder = quickSort(lower);
-        List<String> upperHolder = quickSort(upper);
 
-        lowHolder.addAll(upperHolder);
-        return lowHolder;
+        lower = quickSort(lower);
+        upper = quickSort(upper);
+        lower.add(list.get(list.size() - 1));
+
+        return Stream.of(lower, upper)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
+
+    public static void printResults(int numItemsFound, int numberItemsToFind, Timer sortTimer, Timer searchTimer) {
+        System.out.printf("Found %d / %d entries. Time taken: %d min. %d sec. %d ms.\n",
+                numItemsFound, numberItemsToFind,
+                searchTimer.getMinutes() + sortTimer.getMinutes(),
+                searchTimer.getSeconds() + sortTimer.getSeconds(),
+                searchTimer.getMilliseconds() + sortTimer.getMilliseconds());
+
+        System.out.printf("Sorting time: %d min. %d sec. %d ms.\n",
+                sortTimer.getMinutes(), sortTimer.getSeconds(), sortTimer.getMilliseconds());
+        System.out.printf("Searching time: %d min. %d sec. %d ms.\n",
+                searchTimer.getMinutes(), searchTimer.getSeconds(), searchTimer.getMilliseconds());
+        System.out.println();
+    }
+
+
+
+
 
 }
 
