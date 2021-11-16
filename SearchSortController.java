@@ -34,18 +34,15 @@ public class SearchSortController {
         System.out.println("Start searching (bubble sort + jump search)...");
         int numItemsFound;
         List<String> bubbleSortJumpSearchList = new ArrayList<>(dataSource);
-        // Timer totalSortSearchTimer = new Timer();
+
         Timer sortTimer = new Timer();
-
         boolean completeBubbleSort = BubbleSort.sort(bubbleSortJumpSearchList, linearSearchThreshold);
-
         sortTimer.stopTimer();
 
         if (!completeBubbleSort) {
             Timer nextLinearTimer = new Timer();
             numItemsFound = LinearSearch.search(bubbleSortJumpSearchList, searchItems);
             nextLinearTimer.stopTimer();
-            // totalSortSearchTimer.stopTimer();
 
             System.out.printf("Found %d / %d entries. Time taken: %d min. %d sec. %d ms.\n",
                     numItemsFound, numberItemsToFind,
@@ -63,7 +60,7 @@ public class SearchSortController {
             Timer jumpSearchTimer = new Timer();
             numItemsFound = JumpSearch.search(bubbleSortJumpSearchList, searchItems);
             jumpSearchTimer.stopTimer();
-            // totalSortSearchTimer.stopTimer();
+
             printResults(numItemsFound, numberItemsToFind, sortTimer, jumpSearchTimer);
         }
     }
