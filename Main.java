@@ -8,7 +8,12 @@ public class Main {
     public static final String searchFilePath = "/Users/mikestagney/Downloads/find.txt";
 
     public static void main (String[] args) {
-
+        SearchSortController controller = new SearchSortController();
+        controller.linearSearch();
+        controller.bubbleJump();
+        controller.quickSortBinarySearch();
+    }
+    /*
     List<String> dataSource = FileIO.readFromFile(dataFilePath);
     List<String> searchItems = FileIO.readFromFile(searchFilePath);
     int numberItemsToFind = searchItems.size();
@@ -70,7 +75,7 @@ public class Main {
 
     printResults(numItemsFound, numberItemsToFind, quickSortTimer, binaryTimer);
     }
-
+    */
     public static String getNameFromTuple(List<String> list, int index) {
         String[] tuple = list.get(index).split(" ", 2);
         return tuple[1];

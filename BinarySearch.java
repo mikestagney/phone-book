@@ -9,9 +9,9 @@ public class BinarySearch {
         for (String searchItem : searchItems) {
             int left = 0;
             int right = dataSource.size() - 1;
-            int middle = right / 2;
 
             while (left <= right) {
+                int middle = right / 2;
                 String datum = dataSource.get(middle).split(" ", 2)[1];
                 if (searchItem.equals(datum)) {
                     numItemsFound++;
@@ -24,7 +24,7 @@ public class BinarySearch {
                     right = middle - 1;
 
                 }
-                middle = (left + right) / 2;
+
             }
 
         }
