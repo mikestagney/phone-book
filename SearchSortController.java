@@ -30,11 +30,11 @@ public class SearchSortController {
 
         linearSearchThreshold = Math.abs(linearTimer.getTotalTimeMilli()) * 10L;
     }
-    public void bubbleJump() {
+    public void bubbleSortJumpSearch() {
         System.out.println("Start searching (bubble sort + jump search)...");
         int numItemsFound;
         List<String> bubbleSortJumpSearchList = new ArrayList<>(dataSource);
-        Timer totalSortSearchTimer = new Timer();
+        // Timer totalSortSearchTimer = new Timer();
         Timer sortTimer = new Timer();
 
         boolean completeBubbleSort = BubbleSort.sort(bubbleSortJumpSearchList, linearSearchThreshold);
@@ -45,10 +45,13 @@ public class SearchSortController {
             Timer nextLinearTimer = new Timer();
             numItemsFound = LinearSearch.search(bubbleSortJumpSearchList, searchItems);
             nextLinearTimer.stopTimer();
-            totalSortSearchTimer.stopTimer();
+            // totalSortSearchTimer.stopTimer();
 
             System.out.printf("Found %d / %d entries. Time taken: %d min. %d sec. %d ms.\n",
-                    numItemsFound, numberItemsToFind, totalSortSearchTimer.getMinutes(), totalSortSearchTimer.getSeconds(), totalSortSearchTimer.getMilliseconds() );
+                    numItemsFound, numberItemsToFind,
+                    sortTimer.getMinutes() + nextLinearTimer.getMinutes(),
+                    sortTimer.getSeconds() + nextLinearTimer.getSeconds(),
+                    sortTimer.getMilliseconds() + nextLinearTimer.getMilliseconds() );
             System.out.printf("Sorting time: %d min. %d sec. %d ms. - STOPPED, moved to linear search\n",
                     sortTimer.getMinutes(), sortTimer.getSeconds(), sortTimer.getMilliseconds());
             System.out.printf("Searching time: %d min. %d sec. %d ms.\n",
@@ -59,9 +62,8 @@ public class SearchSortController {
 
             Timer jumpSearchTimer = new Timer();
             numItemsFound = JumpSearch.search(bubbleSortJumpSearchList, searchItems);
-
             jumpSearchTimer.stopTimer();
-            totalSortSearchTimer.stopTimer();
+            // totalSortSearchTimer.stopTimer();
             printResults(numItemsFound, numberItemsToFind, sortTimer, jumpSearchTimer);
         }
     }

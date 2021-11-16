@@ -11,7 +11,7 @@ public class BinarySearch {
             int right = dataSource.size() - 1;
 
             while (left <= right) {
-                int middle = right / 2;
+                int middle = (left + right) / 2;
                 String datum = dataSource.get(middle).split(" ", 2)[1];
                 if (searchItem.equals(datum)) {
                     numItemsFound++;
@@ -19,20 +19,11 @@ public class BinarySearch {
                 }
                 if (searchItem.compareTo(datum) > 0) {
                     left = middle + 1;
-
                 } else {
                     right = middle - 1;
-
                 }
-
             }
-
         }
         return numItemsFound;
-
-
-
-
     }
-
 }
