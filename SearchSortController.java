@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchSortController {
-
-    public static final String dataFilePath = "/Users/mikestagney/Downloads/directory.txt";
-    public static final String searchFilePath = "/Users/mikestagney/Downloads/find.txt";
     List<String> dataSource;
     List<String> searchItems;
     int numberItemsToFind;
     long linearSearchThreshold = 0L;
 
-    SearchSortController() {
+    SearchSortController(String dataFilePath, String searchFilePath) {
         dataSource = FileIO.readFromFile(dataFilePath);
         searchItems = FileIO.readFromFile(searchFilePath);
         numberItemsToFind = searchItems.size();
@@ -78,6 +75,13 @@ public class SearchSortController {
         binaryTimer.stopTimer();
 
         printResults(numItemsFound, numberItemsToFind, quickSortTimer, binaryTimer);
+    }
+    public void hashTableSearch() {
+        System.out.println("Start searching (hash table)...");
+        Timer hashBuildTimer = new Timer();
+
+
+
     }
 
     private static void printResults(int numItemsFound, int numberItemsToFind, Timer sortTimer, Timer searchTimer) {
