@@ -22,7 +22,6 @@ public class HashTable {
                 }
             }
     }
-
     private int hashFunction(String datum) {
         int hash = 7;
         for (int j = 0; j < datum.length(); j++) {

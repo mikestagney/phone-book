@@ -16,7 +16,6 @@ public class QuickSort {
         List<String> lower = new ArrayList<>();
         List<String> upper = new ArrayList<>();
 
-
         for (int i = 0; i < list.size() - 1; i++) {
             if (Main.getNameFromTuple(list, i).compareTo(pivot) > 0) {
                 upper.add(list.get(i));
@@ -24,7 +23,6 @@ public class QuickSort {
                 lower.add(list.get(i));
             }
         }
-
         lower = sort(lower);
         upper = sort(upper);
         lower.add(list.get(list.size() - 1));
@@ -33,5 +31,4 @@ public class QuickSort {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
-
 }

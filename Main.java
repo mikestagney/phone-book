@@ -14,7 +14,6 @@ public class Main {
         controller.quickSortBinarySearch();
         controller.hashTableSearch();
     }
-
     public static String getNameFromTuple(List<String> list, int index) {
         String[] tuple = list.get(index).split(" ", 2);
         return tuple[1];

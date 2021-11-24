@@ -18,26 +18,29 @@ public class JumpSearch {
                 if (name.compareTo(indexName) > 0) {
                     continue;
                 }
-                for (int j = i - 1; j > i - jumpInterval; j--) {
-                    String countBackName = Main.getNameFromTuple(dataSource, j);
-                    if (name.equals(countBackName)) {
+                if (backwardsSearch(dataSource, name, i - 1, i - jumpInterval)) {
+                    numItemsFound++;
+                    break;
+                }
+                if (i + jumpInterval >= dataSource.size() &&
+                    backwardsSearch(dataSource, name, dataSource.size() - 1, i)) {
                         numItemsFound++;
                         break;
-                    }
                 }
-                if (i + jumpInterval >= dataSource.size()) {
-                    for (int j = dataSource.size() - 1; j > i; j--) {
-                        String countBackFromEndName = Main.getNameFromTuple(dataSource, j);
-                        if (name.equals(countBackFromEndName)) {
-                            numItemsFound++;
-                            break;
-                        }
-                    }
+                break;
                 }
+            }
+        return numItemsFound;
+    }
+    public static boolean backwardsSearch(List<String> dataSource, String name, int startIndex, int endIndex) {
+        boolean itemFound = false;
+        for (int j = startIndex; j > endIndex; j--) {
+            String countBackFromEndName = Main.getNameFromTuple(dataSource, j);
+            if (name.equals(countBackFromEndName)) {
+                itemFound = true;
                 break;
             }
         }
-        return numItemsFound;
+        return itemFound;
     }
-
 }

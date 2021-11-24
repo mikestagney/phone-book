@@ -20,7 +20,6 @@ public class BubbleSort {
                     Collections.swap(bubbleSortJumpSearchList, i, i + 1);
                     numOfSwaps++;
                 }
-
             }
             counter++;
 

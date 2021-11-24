@@ -12,7 +12,7 @@ public class BinarySearch {
 
             while (left <= right) {
                 int middle = (left + right) / 2;
-                String datum = dataSource.get(middle).split(" ", 2)[1];
+                String datum = Main.getNameFromTuple(dataSource, middle);
                 if (searchItem.equals(datum)) {
                     numItemsFound++;
                     break;
